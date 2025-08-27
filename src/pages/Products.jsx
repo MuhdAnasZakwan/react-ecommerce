@@ -58,12 +58,8 @@ export default function Products() {
 
     return (
         <>
-            <Header />
+            <Header current="home"/>
             <Container>
-                <Box sx={{mb: 3}} align="center">
-                    <Button variant="contained" color="primary" sx={{mx: 1}}>Home</Button>
-                    <Button variant="outlined" color="primary" sx={{mx: 1}} component={Link} to="/cart">Cart</Button>
-                </Box>
                 <hr />
                 <Box
                     sx={{

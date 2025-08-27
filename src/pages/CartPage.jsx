@@ -13,6 +13,7 @@ import {
 import { Link } from "react-router";
 import { deleteItemFromCart } from "../utils/cart";
 import { useNavigate } from "react-router";
+import Header from "../components/Header";
 
 const CartPage = () => {
     const navigate = useNavigate();
@@ -28,26 +29,8 @@ const CartPage = () => {
 
     return (
         <>
-            <Box fullWidth sx={{ textAlign: "center", my: 2 }}>
-                <Typography variant="h3" sx={{ fontWeight: 700 }}>
-                    Cart
-                </Typography>
-            </Box>
+            <Header current="cart" title="Cart" />
             <Container sx={{ textAlign: "center" }}>
-                <Box sx={{ mb: 3 }}>
-                    <Button
-                        variant="outlined"
-                        color="primary"
-                        sx={{ mx: 1 }}
-                        component={Link}
-                        to="/"
-                    >
-                        Home
-                    </Button>
-                    <Button variant="contained" color="primary" sx={{ mx: 1 }}>
-                        Cart
-                    </Button>
-                </Box>
                 <hr />
                 <TableContainer>
                     <Table sx={{ minWidth: 650 }}>
@@ -94,7 +77,10 @@ const CartPage = () => {
                                             {cart.quantity}
                                         </TableCell>
                                         <TableCell align="right">
-                                            ${cart.price * cart.quantity}
+                                            $
+                                            {(
+                                                cart.price * cart.quantity
+                                            ).toFixed(2)}
                                         </TableCell>
                                         <TableCell align="right">
                                             <Button
@@ -137,7 +123,13 @@ const CartPage = () => {
                 <Box
                     sx={{ display: "flex", justifyContent: "flex-end", mt: 3 }}
                 >
-                    <Button variant="contained" disabled={carts.length === 0} color="primary">
+                    <Button
+                        variant="contained"
+                        disabled={carts.length === 0}
+                        color="primary"
+                        component={Link}
+                        to="/checkout"
+                    >
                         Checkout
                     </Button>
                 </Box>
