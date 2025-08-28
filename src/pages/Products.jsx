@@ -10,6 +10,10 @@ import {
     Paper,
     Chip,
     Typography,
+    Card,
+    CardMedia,
+    CardContent,
+    CardActions,
 } from "@mui/material";
 import { getProducts, deleteProduct } from "../utils/api_products";
 import { useState, useEffect } from "react";
@@ -18,6 +22,7 @@ import { Link, useNavigate } from "react-router";
 import Swal from "sweetalert2";
 import { toast } from "sonner";
 import { AddToCart } from "../utils/cart";
+import { API_URL } from "../utils/constants";
 
 export default function Products() {
     const navigate = useNavigate();
@@ -58,7 +63,7 @@ export default function Products() {
 
     return (
         <>
-            <Header current="home"/>
+            <Header current="home" />
             <Container>
                 <hr />
                 <Box
@@ -113,73 +118,77 @@ export default function Products() {
                 <Grid container spacing={2}>
                     {products.map((product) => (
                         <Grid size={{ sm: 12, md: 6, lg: 4 }} key={product._id}>
-                            <Paper
-                                sx={{
-                                    p: "10px",
-                                    minHeight: 210,
-                                    display: "flex",
-                                    flexDirection: "column",
-                                    justifyContent: "center",
-                                }}
-                            >
-                                <h2 style={{ marginTop: 0 }}>{product.name}</h2>
-                                <Box
-                                    sx={{
-                                        display: "flex",
-                                        justifyContent: "space-between",
-                                        alignItems: "center",
-                                    }}
-                                >
-                                    <Chip
-                                        variant="outlined"
-                                        size="small"
-                                        label={"$" + product.price}
-                                        color="success"
-                                    />
-                                    <Chip
-                                        variant="outlined"
-                                        size="small"
-                                        label={product.category}
-                                        color="warning"
-                                    />
-                                </Box>
-                                <Button
-                                    fullWidth
-                                    variant="contained"
-                                    sx={{ my: "20px" }}
-                                    onClick={() => {
-                                        AddToCart(product);
-                                        navigate("/cart");
-                                    }}
-                                >
-                                    Add To Cart
-                                </Button>
-                                <Box
-                                    sx={{
-                                        display: "flex",
-                                        justifyContent: "space-between",
-                                        alignItems: "center",
-                                    }}
-                                >
-                                    <Button
-                                        component={Link}
-                                        to={`/products/${product._id}/edit`}
-                                        color="primary"
-                                        variant="contained"
+                            <Card>
+                                <CardMedia
+                                    component="img"
+                                    height="200"
+                                    image={API_URL + (product.image ? product.image : "uploads/default_image.png")}
+                                />
+                                <CardContent sx={{ p: 3 }}>
+                                    <Typography
+                                        variant="h5"
+                                        sx={{ minHeight: "64px" }}
                                     >
-                                        Edit
-                                    </Button>
-                                    <Button
-                                        color="error"
-                                        variant="contained"
-                                        onClick={() => {
-                                            handleProductDelete(product._id);
+                                        {product.name}
+                                    </Typography>
+                                    <Box
+                                        sx={{
+                                            display: "flex",
+                                            justifyContent: "space-between",
+                                            pt: 2,
                                         }}
                                     >
-                                        Delete
+                                        <Chip
+                                            label={"$" + product.price}
+                                            color="success"
+                                        />
+                                        <Chip
+                                            label={product.category}
+                                            color="primary"
+                                        />
+                                    </Box>
+                                </CardContent>
+                                <CardActions
+                                    sx={{ display: "block", px: 3, pb: 3 }}
+                                >
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        fullWidth
+                                        onClick={() => addToCart(product)}
+                                    >
+                                        Add To Cart
                                     </Button>
-                                </Box>
-                            </Paper>
+                                    <Box
+                                        sx={{
+                                            display: "flex",
+                                            justifyContent: "space-between",
+                                            pt: 2,
+                                            marginLeft: "0px !important",
+                                        }}
+                                    >
+                                        <Button
+                                            component={Link}
+                                            to={`/products/${product._id}/edit`}
+                                            variant="contained"
+                                            color="info"
+                                        >
+                                            Edit
+                                        </Button>
+                                        <Button
+                                            variant="contained"
+                                            color="error"
+                                            onClick={() => {
+                                                handleProductDelete(
+                                                    product._id
+                                                );
+                                            }}
+                                        >
+                                            Delete
+                                        </Button>
+                                    </Box>
+                                </CardActions>
+                            </Card>
                         </Grid>
                     ))}
                 </Grid>

@@ -9,11 +9,28 @@ import {
     InputLabel,
     Select,
     MenuItem,
+    Chip,
 } from "@mui/material";
+import { CloudUpload } from "@mui/icons-material";
 import { useState, useEffect } from "react";
 import { addProduct } from "../utils/api_products";
 import { toast } from "sonner";
 import { useNavigate } from "react-router";
+import { styled } from "@mui/material/styles";
+import { uploadImage } from "../utils/api_image";
+import { API_URL } from "../utils/constants";
+
+const VisuallyHiddenInput = styled("input")({
+    clip: "rect(0 0 0 0)",
+    clipPath: "inset(50%)",
+    height: 1,
+    overflow: "hidden",
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    whiteSpace: "nowrap",
+    width: 1,
+});
 
 const ProductAdd = () => {
     const navigate = useNavigate();
@@ -22,6 +39,7 @@ const ProductAdd = () => {
     const [description, setDescription] = useState("");
     const [price, setPrice] = useState(0);
     const [category, setCategory] = useState("");
+    const [image, setImage] = useState(null);
 
     const handleFormSubmit = async (event) => {
         // check error
@@ -30,7 +48,7 @@ const ProductAdd = () => {
         }
         try {
             // trigger API addProduct
-            await addProduct(name, description, price, category);
+            await addProduct(name, description, price, category, image);
             // redirect if successful, show success message
             toast.success("New product has been added");
             navigate("/");
@@ -96,6 +114,34 @@ const ProductAdd = () => {
                             </MenuItem>
                         </Select>
                     </FormControl>
+                </Box>
+                <Box mb={2} sx={{display: "flex", gap: "10px", alignItems: "center"}}>
+                    { image ? (
+                        <>
+                        <img src={API_URL + image} width="200px"/>
+                        <Button color="info" variant="contained" size="small" onClick={() => setImage(null)}>
+                            Remove
+                        </Button>
+                        </>
+                    ) : (
+                        <Button
+                        component="label"
+                        role={undefined}
+                        variant="contained"
+                        tabIndex={-1}
+                        startIcon={<CloudUpload />}
+                    >
+                        Upload files
+                        <VisuallyHiddenInput
+                            type="file"
+                            onChange={async (event) => {
+                                const data = await uploadImage(event.target.files[0]);
+                                setImage(data.image_url);
+                            }}
+                            accept="image/*"
+                        />
+                    </Button>
+                    )}
                 </Box>
                 <Box sx={{ mb: 2 }}>
                     <Button
