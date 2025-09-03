@@ -19,6 +19,7 @@ import { useNavigate } from "react-router";
 import { styled } from "@mui/material/styles";
 import { uploadImage } from "../utils/api_image";
 import { API_URL } from "../utils/constants";
+import { getCategories } from "../utils/api_categories";
 
 const VisuallyHiddenInput = styled("input")({
     clip: "rect(0 0 0 0)",
@@ -40,6 +41,7 @@ const ProductAdd = () => {
     const [price, setPrice] = useState(0);
     const [category, setCategory] = useState("");
     const [image, setImage] = useState(null);
+    const [categories, setCategories] = useState([]);
 
     const handleFormSubmit = async (event) => {
         // check error
@@ -56,6 +58,10 @@ const ProductAdd = () => {
             toast.error(error.message);
         }
     };
+
+    useEffect(() => {
+            getCategories().then((data) => setCategories(data));
+    }, []);
 
     return (
         <>
@@ -104,14 +110,9 @@ const ProductAdd = () => {
                                 setCategory(event.target.value);
                             }}
                         >
-                            <MenuItem value={"Consoles"}>Consoles</MenuItem>
-                            <MenuItem value={"Games"}>Games</MenuItem>
-                            <MenuItem value={"Accessories"}>
-                                Accessories
-                            </MenuItem>
-                            <MenuItem value={"Subscriptions"}>
-                                Subscriptions
-                            </MenuItem>
+                            {categories.map((cat) => (
+                                <MenuItem value={cat._id}>{cat.label}</MenuItem>
+                            ))}
                         </Select>
                     </FormControl>
                 </Box>

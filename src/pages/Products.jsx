@@ -23,6 +23,7 @@ import Swal from "sweetalert2";
 import { toast } from "sonner";
 import { AddToCart } from "../utils/cart";
 import { API_URL } from "../utils/constants";
+import { getCategories } from "../utils/api_categories";
 
 export default function Products() {
     const navigate = useNavigate();
@@ -30,12 +31,17 @@ export default function Products() {
     const [products, setProducts] = useState([]);
     const [page, setPage] = useState(1);
     const [category, setCategory] = useState("all");
+    const [categories, setCategories] = useState([]);
 
     useEffect(() => {
         getProducts(category, page).then((data) => {
             setProducts(data);
         });
     }, [category, page]);
+
+    useEffect(() => {
+        getCategories().then((data) => setCategories(data));
+    }, []);
 
     const handleProductDelete = async (id) => {
         Swal.fire({
@@ -104,14 +110,9 @@ export default function Products() {
                             }}
                         >
                             <MenuItem value="all">All</MenuItem>
-                            <MenuItem value={"Consoles"}>Consoles</MenuItem>
-                            <MenuItem value={"Games"}>Games</MenuItem>
-                            <MenuItem value={"Accessories"}>
-                                Accessories
-                            </MenuItem>
-                            <MenuItem value={"Subscriptions"}>
-                                Subscriptions
-                            </MenuItem>
+                            {categories.map((cat) => (
+                                <MenuItem value={cat._id}>{cat.label}</MenuItem>
+                            ))}
                         </Select>
                     </FormControl>
                 </Box>
@@ -122,7 +123,12 @@ export default function Products() {
                                 <CardMedia
                                     component="img"
                                     height="200"
-                                    image={API_URL + (product.image ? product.image : "uploads/default_image.png")}
+                                    image={
+                                        API_URL +
+                                        (product.image
+                                            ? product.image
+                                            : "uploads/default_image.png")
+                                    }
                                 />
                                 <CardContent sx={{ p: 3 }}>
                                     <Typography
@@ -143,7 +149,7 @@ export default function Products() {
                                             color="success"
                                         />
                                         <Chip
-                                            label={product.category}
+                                            label={product.category ? product.category.label : ""}
                                             color="primary"
                                         />
                                     </Box>

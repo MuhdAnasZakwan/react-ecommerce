@@ -5,7 +5,7 @@ const Header = (props) => {
     const { current, title = "Welcome To My Store" } = props;
     return (
         <Box fullWidth sx={{ textAlign: "center", my: 2 }}>
-            <Typography variant="h3" sx={{ fontWeight: 700 }}>
+            <Typography variant="h3" sx={{ fontWeight: 700, mb: 3}}>
                 {title}
             </Typography>
             <Box sx={{ mb: 3 }}>
@@ -44,6 +44,24 @@ const Header = (props) => {
                     to="/categories"
                 >
                     Categories
+                </Button>
+                <Button
+                    variant={current === "login" ? "contained" : "outlined"}
+                    color="primary"
+                    sx={{ mx: 1 }}
+                    component={Link}
+                    to="/login"
+                >
+                    Login
+                </Button>
+                <Button
+                    variant={current === "signup" ? "contained" : "outlined"}
+                    color="primary"
+                    sx={{ mx: 1 }}
+                    component={Link}
+                    to="/signup"
+                >
+                    Sign Up
                 </Button>
             </Box>
         </Box>
